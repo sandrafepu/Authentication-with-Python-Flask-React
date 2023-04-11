@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { Context } from "../store/appContext";
 import Button from 'react-bootstrap/Button';
 
-export const Demo = () => {
+export const Register = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
@@ -28,6 +28,9 @@ export const Demo = () => {
       <Button variant="primary" type="submit">
         Login
       </Button>
+      <Link className="link-register" to="/register">
+        Si no tienes cuenta, regístrate AQUÍ
+      </Link>
     </Form>
 			
 		</div>
