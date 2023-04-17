@@ -1,74 +1,58 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
-import Form from 'react-bootstrap/Form';
-import { Context } from "../store/appContext";
-import Button from 'react-bootstrap/Button';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleClick = async () => { 
-    const resp = await fetch(`https://3001-sandrafepu-authenticati-9nbll8hr6dv.ws-eu93.gitpod.io/api/token`, { 
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }) 
-      })
-      console.log(resp)
-      /*if(!resp.ok) alert("There was a problem in the login request")*/
-      
-      if(resp.status === 401){
-          alert("Invalid credentials")
-      }
-      else if(resp.status === 400){
-          alert("Invalid email or password format")
-      }
-      const data = resp.json()
-      // save your token in the localStorage
-    //also you should set your user into the store using the setStore function
-    console.log(data.token)
-      localStorage.setItem("jwt-token", data.token);
-
-      alert("login correcto")
+    const handleEnterEmail = (event) => {
+        setEmail(event.target.value)
     }
 
+    const handleEnterPassword = (event) => {
+        setPassword(event.target.value)
+    }
 
-	return (
-		<div className="container">
-			  <Form>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control 
-          type="email" 
-          placeholder="Enter email" 
-          value={email}
-          onChange={(ev) => setEmail(ev.target.value)} />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+    const handleSubmit = (event) => {
+        event.preventDefault()
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control 
-          type="password" 
-          placeholder="Password" 
-          value={password}
-          onChange={(ev) => setPassword(ev.target.value)}/>
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group>
-      <Button variant="primary" type="submit" onClick={handleClick}>
-        Login
-      </Button>
-      <Link className="link-register" to="/register">
-        Si no tienes cuenta, regístrate AQUÍ
-      </Link>
-    </Form>
-			
-		</div>
-	);
+        fetch(process.env.BACKEND_URL + "/api/login", {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                "email": email,
+                "password": password
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            //console.log(data)
+            if(data.code == 200){
+                sessionStorage.setItem("session", data.token)
+                navigate("/")
+            }
+            else {
+                alert(data.msg)
+            }
+        })
+    }
+
+    return(
+        <div className="container col-lg-6">
+            <h1>Login</h1>
+            <form className="mt-3" method="POST" onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="username">Username</label>
+                        <input type="email" className="form-control" id="username" placeholder="Enter your username" onInput={handleEnterEmail} required></input>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="password">Password</label>
+                        <input type="password" className="form-control" id="password" onInput={handleEnterPassword} required></input>
+                    </div>
+                    <button type="submit" className="btn btn-primary">Click to login!</button> 
+            </form>
+        </div>
+    )
 };
 

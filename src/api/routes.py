@@ -22,18 +22,16 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-@api.route('/token', methods=["POST"])
+@api.route('/login', methods=['POST'])
 def create_token():
-    email = request.json.get("email", None)
+    username = request.json.get("email", None)
     password = request.json.get("password", None)
-    hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
-    user = User.query.filter_by(email=email).first()
-    
-    if not user: 
-        return jsonify({"msg": "Bad email or password"}), 401
 
-    if bcrypt.checkpw(password.encode('utf-8'), hashed_password):
-        access_token = create_access_token(identity=email)
-        return jsonify(access_token=access_token), 200
+    userInfo = User.query.filter_by(email=username, password=password).first()
+
+    if not userInfo:
+        return jsonify({"msg": "Bad email or password", "code": 401}), 401
     
-    return jsonify({"msg": "Bad email or password"}), 401
+    token = create_access_token(identity=userInfo.id)
+    return jsonify({"token": token, "code": 200}), 200
+    
