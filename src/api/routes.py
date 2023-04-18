@@ -34,4 +34,12 @@ def create_token():
     
     token = create_access_token(identity=userInfo.id)
     return jsonify({"token": token, "code": 200}), 200
+
+@api.route("/private", methods=["GET"])
+@jwt_required()
+def private():
+    userId = get_jwt_identity()
+    user = User.query.get(userId)
+
+    return jsonify({"email": user.email, "code": 200 }), 200
     

@@ -30,7 +30,7 @@ export const Login = () => {
             //console.log(data)
             if(data.code == 200){
                 sessionStorage.setItem("session", data.token)
-                navigate("/")
+                navigate("/private")
             }
             else {
                 alert(data.msg)
