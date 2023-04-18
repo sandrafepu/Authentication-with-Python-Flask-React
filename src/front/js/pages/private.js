@@ -8,6 +8,11 @@ export const Private = () => {
 	// retrieve token form localStorage
 	const token = sessionStorage.getItem('session');
 
+	const handleLogOut = () => {
+		sessionStorage.removeItem('session');
+		navigate("/")
+	}
+
 	fetch(process.env.BACKEND_URL + "/api/private", {
 		method: "GET",
 		headers: {
@@ -30,11 +35,12 @@ export const Private = () => {
 	if(!loggedIn) {
 		return null;
 	}
-	
+
 	return (
 		<div className="text-center mt-5">
 			<h1>Hello {email}!</h1>
 			<h2>I'm private component</h2>
+			<button className="btn btn-danger" onClick={handleLogOut}>Cerrar sesión</button>
 		</div>
 	);
 };
