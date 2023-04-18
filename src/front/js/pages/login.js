@@ -50,7 +50,12 @@ export const Login = () => {
                         <label className="form-label" htmlFor="password">Password</label>
                         <input type="password" className="form-control" id="password" onInput={handleEnterPassword} required></input>
                     </div>
-                    <button type="submit" className="btn btn-primary">Click to login!</button> 
+                    <div className="mb-3">
+                        <a href="/signup">Click here to create an account</a>
+                    </div>
+                    <div className="mb-3">
+                        <button type="submit" className="btn btn-primary">Click to login!</button>
+                    </div>
             </form>
         </div>
     )

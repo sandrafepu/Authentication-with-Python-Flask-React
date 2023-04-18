@@ -42,4 +42,16 @@ def private():
     user = User.query.get(userId)
 
     return jsonify({"email": user.email, "code": 200 }), 200
+
+@api.route('/token', methods=['POST'])
+def registerUser():
+    username = request.json.get("email", None)
+    password = request.json.get("password", None)
+
+    user = User(email = username, password = password, is_active=True)
+    
+    db.session.add(user)
+    db.session.commit()
+    
+    return jsonify({"email": username, "code": 200}), 200
     
