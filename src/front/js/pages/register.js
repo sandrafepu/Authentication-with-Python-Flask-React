@@ -31,9 +31,6 @@ export const Register = () => {
           if(data.code == 200){
               navigate("/login")
           }
-          else {
-              alert(data.msg)
-          }
       })
   }
 
