@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export const Private = () => {
 	const [email, setEmail] = useState("");
+	const [loggedIn, setLoggedIn] = useState(false);
 	const navigate = useNavigate();
 	// retrieve token form localStorage
 	const token = sessionStorage.getItem('session');
@@ -19,12 +20,17 @@ export const Private = () => {
 		//console.log(data)
 		if(data.code == 200){
 			setEmail(data.email)
+			setLoggedIn(true)
 		}
 		else {
 			navigate("/login")
 		}
 	})
 
+	if(!loggedIn) {
+		return null;
+	}
+	
 	return (
 		<div className="text-center mt-5">
 			<h1>Hello {email}!</h1>
